@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>In Search of Self</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+  </script>
+
+    <style>
+
+        body{
+            background-color: black;
+            transition: background-color 2s linear;
+        }
+        #startGame{
+            background-color: black;
+            color:white;
+            border:none;
+            font-size: 48px;
+            padding-left: 30%;
+            padding-top: 20%;
+        }
+    </style>
+
+</head>
+
+<body>
+        <div id ="menu">
+            <button type="button" id="startGame">In Search of Self<br> An RPG by Abid M. Abdelaziz</button>
+        </div>    
+              
+    <audio id="footstepConcrete" src= "Audio/footstepConcrete.mp3" preload="auto"></audio>
+    <audio id="footstepSand" src= "Audio/footstepSand.mp3" preload="auto"></audio>
+    <audio id="footstepGravel" src= "Audio/footstepGravel.mp3" preload="auto"></audio>
+    <audio id="footstepLeaves" src= "Audio/footstepLeaves.mp3" preload="auto"></audio>
+    <audio id="thud" src="Audio/thud.mp3" preload= "auto"></audio>
+    <audio id="door" src="Audio/door.mp3" preload= "auto"></audio>
+    <audio id="ramBMol" src="Audio/ramBMol.mp3" preload= "auto"></audio>
+    <audio id="ramBSafeH" src="Audio/ramBSafeH.mp3" preload= "auto"></audio>
+    <audio id="ramBPure" src="Audio/ramBPure.mp3" preload= "auto"></audio>
+    <audio id="ramBSanc" src="Audio/ramBSanc.mp3" preload= "auto"></audio> 
+    
+    <script>
+        arr=[ 
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,"s4",1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+            [1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1],
+            [1,0,1,"s3",1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1],
+            [1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1],
+            [1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,1,1],
+            [1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,0,1,1],
+            [1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,0,1,1],
+            [1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,0,1,1],
+            [1,0,1,1,0,0,1,1,1,1,0,1,1,"s2",1,0,1,0,1,1],
+            [1,0,1,1,1,0,1,1,1,1,0,1,1,1,1,0,1,0,1,1],
+            [1,0,1,1,1,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1],
+            [1,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1],
+            [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1],
+            [1,0,0,0,0,1,1,"s1",1,1,1,1,1,1,1,0,1,1,0,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            ];
+
+        var pos, row, col, status,count=0 ; 
+        var s1=[17,7], s2=[12,13], s3=[5,3], s4=[0,14];
+        var dis_s1, dis_s2, dis_s3, dis_s3;
+        var v1,v2,v3,v4;
+        var stepConc= document.getElementById("footstepConcrete");
+        var stepSand=document.getElementById("footstepSand");
+        var stepGravel=document.getElementById("footstepGravel");
+        var stepLeaves=document.getElementById("footstepLeaves")
+        var thud = document.getElementById("thud");
+        var door= document.getElementById("door");
+        var ramBMol= document.getElementById("ramBMol");
+            ramBMol.addEventListener('ended', function() {
+             this.currentTime = 0;
+             this.play();
+            }, false);
+        var ramBSafeH= document.getElementById("ramBSafeH");
+            ramBSafeH.addEventListener('ended', function() {
+             this.currentTime = 0;
+             this.play();
+            }, false);
+        var ramBPure= document.getElementById("ramBPure");
+            ramBPure.addEventListener('ended', function() {
+             this.currentTime = 0;
+             this.play();
+            }, false);
+        var ramBSanc = document.getElementById("ramBSanc");
+            ramBSanc.addEventListener('ended', function() {
+             this.currentTime = 0;
+             this.play();
+            }, false);
+
+        var objAud= { 1 : stepLeaves, 2 : stepGravel, 3 : stepSand, 4 : stepConc};
+
+        function distance(row, col, song){
+            return  Math.sqrt((row-song[0])*(row-song[0]) + (col-song[1])*(col-song[1])).toFixed(2)
+        }
+
+        $(document).ready(function(){
+
+        $("#startGame").on("click", function(){
+            $(this).hide();
+            $("body").css("background-color","white")             
+            row= 19
+            col= 1
+            status =1;
+            pos= arr[row][col]
+            door.play();
+            ramBMol.volume=.09;
+            ramBSafeH.volume=0.008
+            ramBPure.volume=0.01
+            ramBSanc.volume=0.01
+            ramBMol.play();
+            ramBSafeH.play();
+            ramBPure.play();
+            ramBSanc.play();
+      
+            if (status == 1){
+                    $(document).on("keydown", function(event){  
+                            if ((event.keyCode == 38) && (arr[row-1][col] == 0 )){  // Up Arrow
+                                row-=1; 
+                                count+=1;  
+                                    x = Math.ceil( (row*2)/10);                 
+                                    stepAudio = objAud[x]
+                                    stepAudio.play(); //Valid Path
+                                pos= arr[row][col];
+                                dis_s1= distance(row,col,s1);
+                                dis_s2= distance(row,col,s2);
+                                dis_s3= distance(row,col,s3);
+                                dis_s4= distance(row,col,s4);
+                                v1= dis_s1 > 11 ? 0 : (1/dis_s1);
+                                v2= dis_s2 > 11 ? 0 : (1/dis_s2);
+                                v3= dis_s3 > 11 ? 0 : (1/dis_s3);
+                                v4= dis_s4 > 11 ? 0 : (1/dis_s4);
+                                ramBMol.volume= v1;
+                                ramBSafeH.volume= v2;
+                                ramBPure.volume=v3;
+                                ramBSanc.volume=v4;
+                                console.log([row,col],x,stepAudio)
+                            }
+                            else if((event.keyCode == 38) && (arr[row-1][col] == 1 )){  
+                                thud.play();  //Wall
+                        }});
+                        $(document).on("keydown", function(event){   
+                            if ((event.keyCode == 40) && (arr[row+1][col] == 0 )){  // Down Arrow
+                                row+=1;
+                                count+=1;
+                                    x = Math.ceil( (row*2)/10);                 
+                                    stepAudio = objAud[x]
+                                    stepAudio.play(); //Valid Path
+                                pos= arr[row][col];
+                                dis_s1= distance(row,col,s1);
+                                dis_s2= distance(row,col,s2);
+                                dis_s3= distance(row,col,s3);
+                                dis_s4= distance(row,col,s4);
+                                v1= dis_s1 > 11 ? 0 : (1/dis_s1);
+                                v2= dis_s2 > 11 ? 0 : (1/dis_s2);
+                                v3= dis_s3 > 11 ? 0 : (1/dis_s3);
+                                v4= dis_s4 > 11 ? 0 : (1/dis_s4);
+                                ramBMol.volume= v1;
+                                ramBSafeH.volume= v2;
+                                ramBPure.volume=v3;
+                                ramBSanc.volume=v4;
+                                console.log([row,col],x,stepAudio)
+                            }
+                            else if((event.keyCode == 40) && (arr[row+1][col] == 1 )){ 
+                                thud.play();   
+                        }});
+                        $(document).on("keydown", function(event){  
+                            if ((event.keyCode == 39) && (arr[row][col+1] == 0 )){  // Right Arrow
+                                col+=1;
+                                count+=1;
+                                    x = Math.ceil( (row*2)/10);
+                                    stepAudio = objAud[x]
+                                    stepAudio.play(); //Valid Path
+                                pos= arr[row][col];
+                                dis_s1= distance(row,col,s1);
+                                dis_s2= distance(row,col,s2);
+                                dis_s3= distance(row,col,s3);
+                                dis_s4= distance(row,col,s4);
+                                v1= dis_s1 > 11 ? 0 : (1/dis_s1);
+                                v2= dis_s2 > 11 ? 0 : (1/dis_s2);
+                                v3= dis_s3 > 11 ? 0 : (1/dis_s3);
+                                v4= dis_s4 > 11 ? 0 : (1/dis_s4);
+                                ramBMol.volume= v1;
+                                ramBSafeH.volume= v2;
+                                ramBPure.volume=v3;
+                                ramBSanc.volume=v4;
+
+                                console.log([row,col],x,stepAudio)
+
+                            }
+                            else if((event.keyCode == 39) && (arr[row][col+1] == 1 )){ 
+                                thud.play(); 
+                        }});
+                        $(document).on("keydown", function(event){   
+                            if ((event.keyCode == 37) && (arr[row][col-1] == 0 )){ // Left Arrow
+                                col-=1;
+                                count+=1;
+                                    x = Math.ceil( (row*2)/10);                 
+                                    stepAudio = objAud[x]
+                                    stepAudio.play(); //Valid Path
+                                pos= arr[row][col];
+                                dis_s1= distance(row,col,s1);
+                                dis_s2= distance(row,col,s2);
+                                dis_s3= distance(row,col,s3);
+                                dis_s4= distance(row,col,s4);
+                                v1= dis_s1 > 11 ? 0 : (1/dis_s1);
+                                v2= dis_s2 > 11 ? 0 : (1/dis_s2);
+                                v3= dis_s3 > 11 ? 0 : (1/dis_s3);
+                                v4= dis_s4 > 11 ? 0 : (1/dis_s4);
+                                ramBMol.volume= v1;
+                                ramBSafeH.volume= v2;
+                                ramBPure.volume=v3;
+                                ramBSanc.volume=v4;
+
+                                console.log([row,col],x,stepAudio)
+
+                            }
+                            else if((event.keyCode == 37) && (arr[row][col-1] == 1 )){ 
+                                thud.play()  
+                        }});
+            }
+        });
+    });
+
+    </script>
+ 
+</body>
+</html>
